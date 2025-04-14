@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,8 @@ export class ProductService {
    }
 
    public getAllProducts() : Observable<Array<any>>{
-    return of(this.products);
+    let rnd=Math.random();
+    if(rnd<0.1) return throwError(() => new Error("Error while fetching products"));
+    else return of(this.products);
    }
 }

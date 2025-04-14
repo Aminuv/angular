@@ -1,5 +1,11 @@
 <div class="container"> 
-    <div class="card">
+    <ng-template #errors>
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Error!</h4>
+            <p>There was an error loading the products. Please try again later.</p>
+        </div>
+    </ng-template>
+    <div class="card" *ngIf="products; else errors">
         <div class="card-header">Products List</div>
         <div class="card-body">
             <table class="table table-striped table-bordered table-hover">

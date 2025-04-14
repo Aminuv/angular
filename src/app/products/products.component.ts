@@ -12,6 +12,8 @@ handlDeleteProduct(_t18: any) {
 throw new Error('Method not implemented.');
 }
   products! : Array<any>;
+  errorMessage! : string;
+  
 
   constructor( private ProductService : ProductService) { }
 
@@ -19,7 +21,10 @@ throw new Error('Method not implemented.');
     this.ProductService.getAllProducts().subscribe({
       next: (data) => {
         this.products = data;
-      }
+      },
+      error: (err) => {
+        this.errorMessage = err;
+      },
     }); 
   }
 
