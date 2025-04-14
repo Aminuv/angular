@@ -1,3 +1,4 @@
+import { Product } from '../model/product.model';
 import { ProductService } from './../services/product.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -11,7 +12,7 @@ export class ProductsComponent implements OnInit {
 handlDeleteProduct(_t18: any) {
 throw new Error('Method not implemented.');
 }
-  products! : Array<any>;
+  products! : Array<Product>;
   errorMessage! : string;
   
 
