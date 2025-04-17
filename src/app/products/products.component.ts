@@ -19,6 +19,10 @@ throw new Error('Method not implemented.');
   constructor( private ProductService : ProductService) { }
 
   ngOnInit(): void {
+    this.handleGetAllProducts();
+  }
+
+  handleGetAllProducts() {
     this.ProductService.getAllProducts().subscribe({
       next: (data) => {
         this.products = data;
@@ -30,8 +34,13 @@ throw new Error('Method not implemented.');
   }
 
 
+
   handleDeleteProduct(product: any) {
-   let index = this.products.indexOf(product);
-   this.products.splice(index, 1);
+   this.ProductService.deleteProduct(product.id).subscribe({
+      next: (data) => {
+        this.handleGetAllProducts();
+      }
+   });
+      
   }
 }

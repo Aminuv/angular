@@ -23,4 +23,8 @@ export class ProductService {
     if(rnd<0.1) return throwError(() => new Error("Error while fetching products"));
     else return of(this.products);
    }
+   public deleteProduct(id: number) : Observable<boolean> {
+    this.products = this.products.filter(product => product.id !== id);
+    return of(true);
+   }
 }
