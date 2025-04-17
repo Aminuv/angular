@@ -35,8 +35,11 @@ throw new Error('Method not implemented.');
 
 
 
-  handleDeleteProduct(product: any) {
-   this.ProductService.deleteProduct(product.id).subscribe({
+  handleDeleteProduct(product:Product) {
+    let confirmation = confirm("Are you sure you want to delete this product?");
+    if(!confirmation) return;
+
+    this.ProductService.deleteProduct(product.id).subscribe({
       next: (data) => {
         //this.handleGetAllProducts();
         let index=this.products.indexOf(product);
