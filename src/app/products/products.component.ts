@@ -38,7 +38,9 @@ throw new Error('Method not implemented.');
   handleDeleteProduct(product: any) {
    this.ProductService.deleteProduct(product.id).subscribe({
       next: (data) => {
-        this.handleGetAllProducts();
+        //this.handleGetAllProducts();
+        let index=this.products.indexOf(product);
+        this.products.splice(index, 1);
       }
    });
       
