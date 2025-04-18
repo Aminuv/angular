@@ -22,6 +22,15 @@
                         <td>{{ product.name }}</td>
                         <td>{{ product.price | currency }}</td>
                         <td>
+                            <i *ngIf="product.promotion==true" class="bi bi-box2-heart-fill text-success" ></i>    
+                        </td>
+                        <td>
+                            <button (click)="handleSetPromotion(product)" [ngClass]="product.promotion==true? 'btn-danger':'btn-success'" class="btn btn-success">
+                                <span *ngIf="product.promotion==true">Promo Off</span>
+                                <span *ngIf="product.promotion==false">Promo On</span>
+                            </button>
+                        </td>
+                        <td>
                             <button (click)="handleDeleteProduct(product)" class="btn btn-danger">
                                 <i class="bi bi-trash"></i> 
                             </button>

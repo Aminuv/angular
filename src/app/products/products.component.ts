@@ -48,4 +48,15 @@ throw new Error('Method not implemented.');
    });
       
   }
+  handleSetPromotion(product:Product) {
+    let promo=product.promotion;
+    this.ProductService.setPromotion(product.id).subscribe({
+      next: (data) => {
+        product.promotion = !promo;
+      },
+      error: (err) => {
+        this.errorMessage = err;
+      },
+    });
+  }
 }
