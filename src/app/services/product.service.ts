@@ -1,5 +1,6 @@
 import { Product } from './../model/product.model';
 import { Injectable } from '@angular/core';
+import { UUID } from 'angular2-uuid';
 import { Observable, of, throwError } from 'rxjs';
 
 @Injectable({
@@ -10,12 +11,15 @@ export class ProductService {
 
   constructor() {
     this.products = [
-      { id: 1, name: 'Product 1', price: 100, promotion: true },
-      { id: 2, name: 'Product 2', price: 200, promotion: false },
-      { id: 3, name: 'Product 3', price: 300, promotion: true },
-      { id: 4, name: 'Product 4', price: 400, promotion: false },
-      { id: 5, name: 'Product 5', price: 500, promotion: true },
+      { id: UUID.UUID(), name: 'Product 1', price: 100, promotion: true },
+      { id: UUID.UUID(), name: 'Product 2', price: 200, promotion: false },
+      { id: UUID.UUID(), name: 'Product 3', price: 300, promotion: true },
+      { id: UUID.UUID(), name: 'Product 4', price: 400, promotion: false },
+      { id: UUID.UUID(), name: 'Product 5', price: 500, promotion: true },
     ];
+    for (let i = 0; i < 100; i++) {
+      this.products.push({ id: UUID.UUID(), name: 'Product ' + (i + 6), price: Math.random() * 1000, promotion: Math.random() > 0.5 });
+    }
    }
 
    public getAllProducts() : Observable<Product[]> {
@@ -23,12 +27,12 @@ export class ProductService {
     if(rnd<0.1) return throwError(() => new Error("Error while fetching products"));
     else return of(this.products);
    }
-   public deleteProduct(id: number) : Observable<boolean> {
+   public deleteProduct(id: string) : Observable<boolean> {
     this.products = this.products.filter(product => product.id !== id);
     return of(true);
    }
 
-    public setPromotion(id : number) : Observable<boolean> {
+    public setPromotion(id : string) : Observable<boolean> {
       let Product = this.products.find(product => product.id === id);
       if (Product) {
         Product.promotion = !Product.promotion;
