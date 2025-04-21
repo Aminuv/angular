@@ -8,7 +8,6 @@
     <div class="card" *ngIf="products; else errors">
         <div class="card-header">Products List</div>
         <div class="card-body">
-            {{ searchFormGroup.value | json }}
             <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchProduct()">
                 <div class="input-group">
                     <label class="input-group-text">Keyword :</label>
