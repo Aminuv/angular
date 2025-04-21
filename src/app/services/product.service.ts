@@ -50,8 +50,13 @@ export class ProductService {
       }
       else return throwError(() => new Error("Product not found"));
     }
-    public searchProducts(keyword: string) : Observable<Product[]> {
-      let product = this.products.filter(product=> product.name.includes(keyword));
-      return of(product);
+    
+    public searchProducts(keyword: string, page : number, size : number) : Observable<PageProduct> {
+      let result = this.products.filter(product=> product.name.includes(keyword));
+      let index = page*size;
+    let totalPages = ~~(result.length/size);
+    if (this.products.length % size != 0) totalPages++;
+    let PageProduct = result.slice(index, index+size);
+    return of({products: PageProduct, Products: PageProduct, page: page, size: size, totalPages: totalPages});
     }
 }

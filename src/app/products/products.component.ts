@@ -1,4 +1,3 @@
-// Removed duplicate import
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Product } from '../model/product.model';
 import { ProductService } from './../services/product.service';
@@ -8,31 +7,28 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-products',
   standalone: false,
   templateUrl: './products.component.html',
-  styleUrl: './products.component.scss'
+  styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit {
-handlDeleteProduct(_t18: any) {
-throw new Error('Method not implemented.');
-}
-  products! : Array<Product>;
-  currentPage : number= 0;
-  pageSize : number= 5;
-  totalPages : number= 0;
-  errorMessage! : string;
-  searchFormGroup! : FormGroup;
+  products!: Array<Product>;
+  currentPage: number = 0;
+  pageSize: number = 5;
+  totalPages: number = 0;
+  errorMessage!: string;
+  searchFormGroup!: FormGroup;
+  currentAction : string="all";
   
-
-  constructor( private ProductService : ProductService, private fb : FormBuilder) { }
+  constructor(private productService: ProductService, private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.searchFormGroup=this.fb.group({
+    this.searchFormGroup = this.fb.group({
       keyword: this.fb.control(null)
     });
     this.handleGetPageProducts();
   }
 
   handleGetPageProducts() {
-    this.ProductService.getPageProducts(this.currentPage, this.pageSize).subscribe({
+    this.productService.getPageProducts(this.currentPage, this.pageSize).subscribe({
       next: (data) => {
         this.products = data.products;
         this.totalPages = data.totalPages;
@@ -44,7 +40,7 @@ throw new Error('Method not implemented.');
   }
 
   handleGetAllProducts() {
-    this.ProductService.getAllProducts().subscribe({
+    this.productService.getAllProducts().subscribe({
       next: (data) => {
         this.products = data;
       },
@@ -54,24 +50,24 @@ throw new Error('Method not implemented.');
     }); 
   }
 
-
-
-  handleDeleteProduct(product:Product) {
+  handleDeleteProduct(product: Product) {
     let confirmation = confirm("Are you sure you want to delete this product?");
     if(!confirmation) return;
 
-    this.ProductService.deleteProduct(product.id).subscribe({
+    this.productService.deleteProduct(product.id).subscribe({
       next: (data) => {
-        //this.handleGetAllProducts();
-        let index=this.products.indexOf(product);
+        let index = this.products.indexOf(product);
         this.products.splice(index, 1);
+      },
+      error: (err) => {
+        this.errorMessage = err;
       }
-   });
-      
+    });
   }
-  handleSetPromotion(product:Product) {
-    let promo=product.promotion;
-    this.ProductService.setPromotion(product.id).subscribe({
+
+  handleSetPromotion(product: Product) {
+    let promo = product.promotion;
+    this.productService.setPromotion(product.id).subscribe({
       next: (data) => {
         product.promotion = !promo;
       },
@@ -82,17 +78,26 @@ throw new Error('Method not implemented.');
   }
 
   handleSearchProduct() {
-    let keyword=this.searchFormGroup.value.keyword;
-    this.ProductService.searchProducts(keyword).subscribe({
-      next : (data) => {
-        this.products = data;
-        console.log(data);
+    this.currentAction="search";
+    this.currentPage=0;
+    let keyword = this.searchFormGroup.value.keyword;
+    this.productService.searchProducts(keyword, this.currentPage, this.pageSize).subscribe({
+      next: (data) => {
+        this.products = data.products;
+        this.totalPages = data.totalPages;
+      },
+      error: (err) => {
+        this.errorMessage = err;
       }
-    })
+    });
   }
 
   gotoPage(i: number) {
     this.currentPage = i;
-    this.handleGetPageProducts();
+    if(this.currentAction==='all')
+      this.handleGetPageProducts()
+    else
+    this.handleSearchProduct();
+      
   }
 }
