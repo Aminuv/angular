@@ -1,3 +1,4 @@
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Product } from '../model/product.model';
 import { ProductService } from './../services/product.service';
 import { Component, OnInit } from '@angular/core';
@@ -14,11 +15,15 @@ throw new Error('Method not implemented.');
 }
   products! : Array<Product>;
   errorMessage! : string;
+  searchFormGroup! : FormGroup;
   
 
-  constructor( private ProductService : ProductService) { }
+  constructor( private ProductService : ProductService, private fb : FormBuilder) { }
 
   ngOnInit(): void {
+    this.searchFormGroup=this.fb.group({
+      keyword: this.fb.control(null)
+    });
     this.handleGetAllProducts();
   }
 
@@ -58,5 +63,15 @@ throw new Error('Method not implemented.');
         this.errorMessage = err;
       },
     });
+  }
+
+  handleSearchProduct() {
+    let keyword=this.searchFormGroup.value.keyword;
+    this.ProductService.searchProducts(keyword).subscribe({
+      next : (data) => {
+        this.products = data;
+        console.log(data);
+      }
+    })
   }
 }

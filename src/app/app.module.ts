@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { ProductsComponent } from './products/products.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CustomersComponent } from './customers/customers.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { CustomersComponent } from './customers/customers.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     HttpClientModule
   ],
   providers: [],
