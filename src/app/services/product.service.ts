@@ -1,4 +1,4 @@
-import { Product } from './../model/product.model';
+import { PageProduct, Product } from './../model/product.model';
 import { Injectable } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 import { Observable, of, throwError } from 'rxjs';
@@ -27,6 +27,16 @@ export class ProductService {
     if(rnd<0.1) return throwError(() => new Error("Error while fetching products"));
     else return of(this.products);
    }
+
+   public getPageProducts(page:number, size:number) : Observable<PageProduct> {
+    let index = page*size;
+    let totalPages = ~~this.products/size;
+    if (this.products.length % size != 0) totalPages++;
+    let PageProduct = this.products.slice(index, index+size);
+    return of({products: PageProduct, Products: PageProduct, page: page, size: size, totalPages: totalPages});
+   }
+
+
    public deleteProduct(id: string) : Observable<boolean> {
     this.products = this.products.filter(product => product.id !== id);
     return of(true);

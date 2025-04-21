@@ -1,3 +1,4 @@
+// Removed duplicate import
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Product } from '../model/product.model';
 import { ProductService } from './../services/product.service';
@@ -14,6 +15,9 @@ handlDeleteProduct(_t18: any) {
 throw new Error('Method not implemented.');
 }
   products! : Array<Product>;
+  currentPage : number= 0;
+  pageSize : number= 5;
+  totalPages : number= 0;
   errorMessage! : string;
   searchFormGroup! : FormGroup;
   
@@ -24,7 +28,19 @@ throw new Error('Method not implemented.');
     this.searchFormGroup=this.fb.group({
       keyword: this.fb.control(null)
     });
-    this.handleGetAllProducts();
+    this.handleGetPageProducts();
+  }
+
+  handleGetPageProducts() {
+    this.ProductService.getPageProducts(this.currentPage, this.pageSize).subscribe({
+      next: (data) => {
+        this.products = data.products;
+        this.totalPages = data.totalPages;
+      },
+      error: (err) => {
+        this.errorMessage = err;
+      },
+    }); 
   }
 
   handleGetAllProducts() {
