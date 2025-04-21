@@ -30,7 +30,7 @@ export class ProductService {
 
    public getPageProducts(page:number, size:number) : Observable<PageProduct> {
     let index = page*size;
-    let totalPages = ~~this.products/size;
+    let totalPages = ~~(this.products.length/size);
     if (this.products.length % size != 0) totalPages++;
     let PageProduct = this.products.slice(index, index+size);
     return of({products: PageProduct, Products: PageProduct, page: page, size: size, totalPages: totalPages});
