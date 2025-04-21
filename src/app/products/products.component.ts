@@ -90,4 +90,9 @@ throw new Error('Method not implemented.');
       }
     })
   }
+
+  gotoPage(i: number) {
+    this.currentPage = i;
+    this.handleGetPageProducts();
+  }
 }
