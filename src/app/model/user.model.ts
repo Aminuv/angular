@@ -4,3 +4,9 @@ export interface User {
     password: string;
     role: string[];
 }
+
+export interface AppUser {
+    userId: string;
+    username: string;
+    role: string[];
+}
