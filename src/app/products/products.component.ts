@@ -4,6 +4,8 @@ import { ProductService } from './../services/product.service';
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 import { Router } from '@angular/router';
+import { UUID } from 'angular2-uuid';
+import { Observable, of } from 'rxjs';
 @Component({
   selector: 'app-products',
   standalone: false,
@@ -13,7 +15,7 @@ import { Router } from '@angular/router';
 export class ProductsComponent implements OnInit {
   products!: Array<Product>;
   currentPage: number = 0;
-  pageSize: number = 5;
+  pageSize: number = 10;
   totalPages: number = 0;
   errorMessage!: string;
   searchFormGroup!: FormGroup;
@@ -106,5 +108,15 @@ export class ProductsComponent implements OnInit {
 
   handleNewProduct() {
     this.router.navigate(['/admin/new-product']);
+  }
+
+  public addNewProduct(product: Product) : Observable<Product> {
+    product.id = UUID.UUID();
+    this.products.push(product);
+    return of(product);
+  }
+
+  handleEditProduct(product: Product) {
+    this.router.navigate(['/admin/edit-product', product.id]);
   }
 }

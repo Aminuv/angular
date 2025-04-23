@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ProductService } from '../services/product.service';
 @Component({
   selector: 'app-new-product',
   standalone: false,
@@ -9,7 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class NewProductComponent implements OnInit {
   productFormGroup!: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, public prodService: ProductService) { }
 
   ngOnInit(): void {
     this.productFormGroup = this.fb.group({
@@ -20,20 +21,16 @@ export class NewProductComponent implements OnInit {
   }
 
   handleAddProduct() {
-    console.log(this.productFormGroup.value);
-  }
+    let product = this.productFormGroup.value;
+    this.prodService.addNewProduct(product).subscribe({
+      next: (data) => {
+        alert('Product added successfully');
+        this.productFormGroup.reset();
+      },
+      error: (err) => {
+        console.error('Error adding product:', err);
 
-  getErrorMessage(fieldName: string, errors: any) {
-    if (errors.required) {
-      return `${fieldName} is required`;
-    }
-    else if (errors.minlength) {
-      return `${fieldName} must be at least ${errors.minlength.requiredLength} characters long`;
-    }
-    else if (errors.min) {
-      return `${fieldName} should have a minimum value of ${errors.min.min}`;
-    }
-    return '';
+      }
+    })
   }
-
 }

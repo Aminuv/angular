@@ -9,6 +9,15 @@ import { Observable, of, throwError } from 'rxjs';
 export class ProductService {
   private products!: Array<Product>;
 
+  public updateProduct(id: string, updatedProduct: Product): Observable<Product> {
+    const index = this.products.findIndex(p => p.id === id);
+    if (index === -1) {
+      return throwError(() => new Error('Product not found'));
+    }
+    this.products[index] = { ...updatedProduct, id };
+    return of(this.products[index]);
+  }
+
   constructor() {
     this.products = [
       { id: UUID.UUID(), name: 'Product 1', price: 100, promotion: true },
@@ -17,7 +26,7 @@ export class ProductService {
       { id: UUID.UUID(), name: 'Product 4', price: 400, promotion: false },
       { id: UUID.UUID(), name: 'Product 5', price: 500, promotion: true },
     ];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 50; i++) {
       this.products.push({ id: UUID.UUID(), name: 'Product ' + (i + 6), price: Math.random() * 1000, promotion: Math.random() > 0.5 });
     }
    }
@@ -26,6 +35,12 @@ export class ProductService {
     let rnd=Math.random();
     if(rnd<0.1) return throwError(() => new Error("Error while fetching products"));
     else return of(this.products);
+   }
+
+   public addNewProduct(product: Product): Observable<Product> {
+    product.id = UUID.UUID();
+    this.products.push(product);
+    return of(product);
    }
 
    public getPageProducts(page:number, size:number) : Observable<PageProduct> {
@@ -59,4 +74,28 @@ export class ProductService {
     let PageProduct = result.slice(index, index+size);
     return of({products: PageProduct, Products: PageProduct, page: page, size: size, totalPages: totalPages});
     }
+
+    public getProduct(id: string) : Observable<Product> {
+      let Product = this.products.find(product => product.id === id);
+      if (Product) return of(Product);
+      else return throwError(() => new Error("Product not found"));
+    }
+
+     getErrorMessage(fieldName: string, errors: any) {
+    if (errors.required) {
+      return `${fieldName} is required`;
+    }
+    else if (errors.minlength) {
+      return `${fieldName} must be at least ${errors.minlength.requiredLength} characters long`;
+    }
+    else if (errors.min) {
+      return `${fieldName} should have a minimum value of ${errors.min.min}`;
+    }
+    return '';
+  }
+
+  public getProducts(product: Product): Observable<Product[]> {
+    this.products = this.products.map(p => (p.id === product.id) ? product : p);
+    return of(this.products);
+  }
 }

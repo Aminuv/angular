@@ -1,0 +1,38 @@
+<div class="container">
+    <ng-template #errors>
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Error!</h4>
+            <p>There was an error loading the products. Please try again later.</p>
+        </div>
+    </ng-template>
+    <div class="card" *ngIf="product; else errors">
+        <div class="card-header">Edit Product</div>
+        <div class="card-body">
+            <form [formGroup]="editProductFormGroup" (ngSubmit)="handleEditProduct()">
+                <div>
+                    <label class="form-label">ID :</label>
+                    <label>{{product.id}}</label>
+                </div>
+                <div class="input-group mb-3">
+                    <label class="form-label">Product Name :</label>
+                    <input type="text" class="form-control" formControlName="name">
+                    <small *ngIf="editProductFormGroup.controls['name'].errors && editProductFormGroup.controls['name'].touched" class="text-danger">
+                        {{prodService.getErrorMessage('name', editProductFormGroup.controls['name'].errors)}}
+                    </small>
+                </div>
+                <div class="input-group mb-3">
+                    <label class="form-label">Price :</label>
+                    <input type="number" class="form-control" formControlName="price">
+                    <small *ngIf="editProductFormGroup.controls['price'].errors && editProductFormGroup.controls['price'].touched" class="text-danger">
+                        {{prodService.getErrorMessage('price', editProductFormGroup.controls['price'].errors)}}
+                    </small>
+                </div>
+                <div class="input-group mb-3">
+                    <label class="form-label">Promotion :</label>
+                    <input type="checkbox" class="form-check-input" formControlName="promotion">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
